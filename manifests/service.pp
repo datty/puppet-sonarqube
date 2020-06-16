@@ -6,7 +6,28 @@ class sonarqube::service {
     group => $sonarqube::group,
   }
 
-  file_line { 'set PIDDIR in startup script':
+#Stupid hack to add headers for Ubuntu
+  file_line { 'set begin init info header':
+    ensure   => present,
+    path     => $sonarqube::script,
+    line     => "### BEGIN INIT INFO",
+    multiple => false,
+  }
+  -> file_line { 'set Default-Start':
+    ensure   => present,
+    path     => $sonarqube::script,
+    line     => "# Default-Start:     2 3 4 5",
+    after    => '^### BEGIN INIT INFO',
+    multiple => false,
+  }
+  -> file_line { 'set end init info header':
+    ensure   => present,
+    path     => $sonarqube::script,
+    line     => "### END INIT INFO",
+    after    => "# Default-Start:     2 3 4 5",
+    multiple => false,
+  }
+  -> file_line { 'set PIDDIR in startup script':
     ensure   => present,
     path     => $sonarqube::script,
     line     => "PIDDIR=${sonarqube::home}",
