@@ -43,6 +43,10 @@ class sonarqube::install {
     ensure => directory,
     mode   => '0700',
   }
+  -> file { $sonarqube::installroot:
+    ensure => directory,
+    mode   => '0700',
+  }
   -> file { "${sonarqube::installroot}/${sonarqube::distribution_name}-${sonarqube::version}":
     ensure => directory,
   }
